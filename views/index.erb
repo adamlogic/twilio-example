@@ -11,7 +11,9 @@
       type="text/css" rel="stylesheet" />
     <script type="text/javascript">
  
-    Twilio.Device.setup("<%= token %>", {debug: true});
+      var connection;
+
+      Twilio.Device.setup("<%= token %>", {debug: true});
  
       Twilio.Device.ready(function (device) {
         $("#log").text("Ready");
@@ -31,23 +33,32 @@
  
       /* Listen for incoming connections */
       Twilio.Device.incoming(function (conn) {
+        connection = conn
         $("#log").text("Incoming connection from " + conn.parameters.From);
-        // accept the incoming connection and start two-way audio
-        conn.accept();
       });
  
       function call() {
         Twilio.Device.connect();
       }
   
+      function answer() {
+        connection.accept();
+        $("#log").text("Connected with " + connection.parameters.From);
+      }
+  
       function hangup() {
         Twilio.Device.disconnectAll();
+        connection = null;
       }
     </script>
   </head>
   <body>
     <button class="call" onclick="call();">
       Call
+    </button>
+  
+    <button class="call" onclick="answer();">
+      Answer
     </button>
   
     <button class="hangup" onclick="hangup();">

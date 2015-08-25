@@ -17,7 +17,6 @@ end
 post '/voice' do
     response = Twilio::TwiML::Response.new do |r|
         r.Dial :callerId => '+15124002030' do |d|
-            d.Number '+16143021744'
             d.Client 'example'
         end
     end
